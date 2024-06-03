@@ -2,7 +2,7 @@ type Props = {};
 
 export default function Footer({}: Props) {
   return (
-    <footer>
+    <footer className="footer">
       <small>
         <p>
           &copy; Copyright by{" "}
