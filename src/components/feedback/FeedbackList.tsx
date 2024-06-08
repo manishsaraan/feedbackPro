@@ -1,7 +1,7 @@
 import FeedbackItem from "./FeedbackItem";
-import { type IFeedbackItem } from "../lib/types";
-import Spinner from "./Spinner";
-import ErrorMessage from "./ErrorMessage";
+import { type IFeedbackItem } from "../../lib/types";
+import Spinner from "../Spinner";
+import ErrorMessage from "../ErrorMessage";
 
 type Props = {
   feedbackItems: IFeedbackItem[];

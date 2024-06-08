@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MAX_CHARACTERS } from "../constants";
+import { MAX_CHARACTERS } from "../../constants";
 type Props = {
   onAddToList: (text: string) => void;
 };

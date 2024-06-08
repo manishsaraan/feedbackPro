@@ -1,6 +1,6 @@
-import FeedbackList from "./FeedbackList";
+import FeedbackList from "../feedback/FeedbackList";
 import Header from "./Header";
-import { type IFeedbackItem } from "../lib/types";
+import { type IFeedbackItem } from "../../lib/types";
 
 type Props = {
   feedbackItems: IFeedbackItem[];
