@@ -1,13 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Containter from "./components/layout/Containter";
 import Footer from "./components/layout/Footer";
-import HashTagList from "./components/HashTagList";
+import HashTagList from "./components/hashtag/HashTagList";
 import { type IFeedbackItem } from "./lib/types";
 
 function App() {
   const [feedbackItems, setFeedbackItems] = useState<IFeedbackItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
+
+  const companyList = useMemo(
+    () =>
+      feedbackItems
+        .map((feedback: IFeedbackItem) => feedback.company)
+        .filter((company, index, array) => array.indexOf(company) === index),
+    [feedbackItems]
+  );
+
+  const filteredItems = useMemo(
+    () =>
+      selectedCompany
+        ? feedbackItems.filter(
+            (feedback: IFeedbackItem) => feedback.company === selectedCompany
+          )
+        : feedbackItems,
+    [feedbackItems, selectedCompany]
+  );
 
   const fetchFeedbackItems = async () => {
     setLoading(true);
@@ -33,25 +52,29 @@ function App() {
   };
 
   const saveItem = async (newItem: IFeedbackItem) => {
-    const res = await fetch(
-      "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks",
-      {
-        method: "POST",
-        body: JSON.stringify(newItem),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+    try {
+      const res = await fetch(
+        "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks",
+        {
+          method: "POST",
+          body: JSON.stringify(newItem),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Something went wrong");
       }
-    );
 
-    if (!res.ok) {
-      throw new Error("Something went wrong");
+      const data = res.json();
+
+      console.log(data, "data");
+    } catch (error) {
+      console.log(error, "error");
     }
-
-    const data = res.json();
-
-    console.log(data, "data");
   };
 
   const handleAddToList = async (text: string) => {
@@ -97,10 +120,13 @@ function App() {
       <Containter
         errorMessage={errorMessage}
         loading={loading}
-        feedbackItems={feedbackItems}
+        feedbackItems={filteredItems}
         handleAddToList={handleAddToList}
       />
-      <HashTagList />
+      <HashTagList
+        setSelectedCompany={setSelectedCompany}
+        companyList={companyList}
+      />
     </div>
   );
 }
