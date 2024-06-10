@@ -6,6 +6,8 @@ type Props = {
 
 export default function FeedbackForm({ onAddToList }: Props) {
   const [text, setText] = useState<string>("");
+  const [showValidIndicator, setShowValidIndicator] = useState(false);
+  const [showInValidIndicator, setShowInValidIndicator] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -16,8 +18,23 @@ export default function FeedbackForm({ onAddToList }: Props) {
     setText(newText);
   };
 
+  const resetIndicators = () => {
+    setShowValidIndicator(false);
+    setShowInValidIndicator(false);
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (text.includes("#") && text.length > 5) {
+      setShowValidIndicator(true);
+      setShowInValidIndicator(false);
+      setTimeout(resetIndicators, 2000);
+    } else {
+      setShowValidIndicator(false);
+      setShowInValidIndicator(true);
+      setTimeout(resetIndicators, 2000);
+      return;
+    }
+
     setText("");
     onAddToList(text);
   };
@@ -25,7 +42,12 @@ export default function FeedbackForm({ onAddToList }: Props) {
   const charCount = MAX_CHARACTERS - text.length;
 
   return (
-    <form onSubmit={handleSubmit} className="form">
+    <form
+      onSubmit={handleSubmit}
+      className={`form ${showValidIndicator ? "form--valid" : ""} ${
+        showInValidIndicator ? "form--invalid" : ""
+      }`}
+    >
       <textarea
         value={text}
         onChange={handleChange}
