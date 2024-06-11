@@ -1,11 +1,6 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  createContext,
-  useContext,
-} from "react";
+import React, { useMemo, useState, createContext } from "react";
 import { IFeedbackItem } from "../../lib/types";
+import { useFeedbackItems } from "../hooks/useFeedbackItems";
 
 type Props = {
   children: React.ReactNode;
@@ -24,9 +19,8 @@ export const FeedbackItemsContext = createContext<IFeedbackItemsContext | null>(
 );
 
 export default function FeedbackItemsContextProvider({ children }: Props) {
-  const [feedbackItems, setFeedbackItems] = useState<IFeedbackItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { loading, feedbackItems, errorMessage, setFeedbackItems } =
+    useFeedbackItems();
   const [selectedCompany, setSelectedCompany] = useState("");
 
   const filteredItems = useMemo(
@@ -80,29 +74,6 @@ export default function FeedbackItemsContextProvider({ children }: Props) {
     await saveItem(newItem);
   };
 
-  const fetchFeedbackItems = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks"
-      );
-
-      if (!res.ok) {
-        throw new Error("Something went wrong");
-      }
-
-      const data = await res.json();
-
-      setLoading(false);
-      setFeedbackItems(data.feedbacks);
-      setErrorMessage("");
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-      setErrorMessage("Something went wrong");
-    }
-  };
-
   const saveItem = async (newItem: IFeedbackItem) => {
     try {
       const res = await fetch(
@@ -129,10 +100,6 @@ export default function FeedbackItemsContextProvider({ children }: Props) {
     }
   };
 
-  useEffect(() => {
-    fetchFeedbackItems();
-  }, []);
-
   return (
     <FeedbackItemsContext.Provider
       value={{
@@ -147,14 +114,4 @@ export default function FeedbackItemsContextProvider({ children }: Props) {
       {children}
     </FeedbackItemsContext.Provider>
   );
-}
-
-export function useFeedbackItemsContext() {
-  const ctx = useContext(FeedbackItemsContext);
-
-  if (!ctx) {
-    throw new Error("No Feedback Items Context found");
-  }
-
-  return ctx;
 }
