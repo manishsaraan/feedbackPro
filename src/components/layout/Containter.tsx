@@ -9,19 +9,14 @@ type Props = {
   handleAddToList: (text: string) => void;
 };
 
-export default function Containter({
-  feedbackItems,
-  loading,
-  errorMessage,
-  handleAddToList,
-}: Props) {
+export default function Containter() {
   return (
     <main className="container">
-      <Header handleAddToList={handleAddToList} />
+      <Header />
       <FeedbackList
-        errorMessage={errorMessage}
-        loading={loading}
-        feedbackItems={feedbackItems}
+      // errorMessage={errorMessage}
+      // loading={loading}
+      // feedbackItems={feedbackItems}
       />
     </main>
   );

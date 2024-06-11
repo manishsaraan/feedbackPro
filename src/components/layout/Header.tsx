@@ -2,18 +2,16 @@ import Pattern from "../Pattern";
 import Logo from "../Logo";
 import PageHeading from "../PageHeading";
 import FeedbackForm from "../feedback/FeedbackForm";
+import { useFeedbackItemsContext } from "../hooks/useFeedbackItemsContext";
 
-type Props = {
-  handleAddToList: (text: any) => void;
-};
-
-export default function Header({ handleAddToList }: Props) {
+export default function Header() {
+  const ctx = useFeedbackItemsContext();
   return (
     <header>
       <Pattern />
       <Logo />
       <PageHeading />
-      <FeedbackForm onAddToList={handleAddToList} />
+      <FeedbackForm onAddToList={ctx.handleAddToList} />
     </header>
   );
 }
