@@ -1,17 +1,14 @@
-import { useFeedbackItemsContext } from "../hooks/useFeedbackItemsContext";
+import { useFeedbackItemsStore } from "../../stores/feedbackItemsStore";
 import HashTagItem from "./HashTagItem";
 
 export default function HashTagList() {
-  const ctx = useFeedbackItemsContext();
+  const companyList = useFeedbackItemsStore((state) => state.getCompanyList());
+  const selectCompany = useFeedbackItemsStore((state) => state.selectCompany);
 
   return (
     <ul className="hashtags">
-      {ctx.companyList.map((company: string) => (
-        <HashTagItem
-          onClick={ctx.setSelectedCompany}
-          key={company}
-          company={company}
-        />
+      {companyList.map((company: string) => (
+        <HashTagItem onClick={selectCompany} key={company} company={company} />
       ))}
     </ul>
   );

@@ -2,16 +2,16 @@ import Pattern from "../Pattern";
 import Logo from "../Logo";
 import PageHeading from "../PageHeading";
 import FeedbackForm from "../feedback/FeedbackForm";
-import { useFeedbackItemsContext } from "../hooks/useFeedbackItemsContext";
+import { useFeedbackItemsStore } from "../../stores/feedbackItemsStore";
 
 export default function Header() {
-  const ctx = useFeedbackItemsContext();
+  const addItemToList = useFeedbackItemsStore((state) => state.addItemToList);
   return (
     <header>
       <Pattern />
       <Logo />
       <PageHeading />
-      <FeedbackForm onAddToList={ctx.handleAddToList} />
+      <FeedbackForm onAddToList={addItemToList} />
     </header>
   );
 }
